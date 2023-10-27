@@ -366,7 +366,6 @@ cargarPropietarios(){
 
     this.servicio.post(url,params).subscribe(
       res=>{
-        console.log(res)
         if( res?.data ){
           this.token = res?.data?.access_token;
         }else{
@@ -392,7 +391,6 @@ cargarPropietarios(){
           this.toast.mensajeSuccess("Pedidos Enviados","Envío de pedidos")
             this.Limpieza(2)
         }else{
-          console.log( res );
           this.toast.mensajeError(String(res?.errors[0]?.message),"Error")
         }
       }

@@ -33,7 +33,6 @@ export class ModalPropietariosIComponent implements OnInit {
   ngOnInit(): void {
     this.catalogo = this.auth.returnCatalogo()
     this.validacion();
-    console.log(this.data)
   }
 
   validacion(){
