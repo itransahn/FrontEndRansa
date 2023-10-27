@@ -24,7 +24,7 @@ export class OrdenesComponent implements OnInit {
   public contrasena  : string = 'Ransa-360';
   public token       : string = '';
   public propietario : string = '';
-
+  public UrlEnvio    : string = '';
     //Parametrizar Columnas 
     public PLANILLA : string = 'FACTURA';
     public CODIGOS  : string = 'CODIGOS';
@@ -32,6 +32,11 @@ export class OrdenesComponent implements OnInit {
     public DESTINO  : string = 'PROVEEDOR';
     public Lote     : string = 'Lote';
 
+    public propietarioQA : string = '';
+    public usuarioAuth0 : string = '';
+    public usuarioAuthQA : string = '';
+    public PwdPrd : string = '';
+    public PwdQa  : string = '';
 
        //Paginacion
    public page = 0;
@@ -202,8 +207,8 @@ storerkey            : this.propietario,
                               sku            : String(array[p]?.[this.CODIGOS]),
                               uom            : 'CJ',
                               externlineno   : String(body[k].details.length + 1),
-                              externpokey    : String(array[p]?.[this.PLANILLA]),
-                              pokey          : String(array[p]?.[this.PLANILLA]),
+                              // externpokey    : String(array[p]?.[this.PLANILLA]),
+                              // pokey          : String(array[p]?.[this.PLANILLA]),
                               // externpolineno : String(body[k].details.length + 1),
                               LOTTABLE06     : String(array[p]?.[this.Lote])
                           })
@@ -215,8 +220,9 @@ storerkey            : this.propietario,
                           sku            : String(array[p]?.[this.CODIGOS]),
                           uom            : 'CJ',
                           externlineno   : String(body[k].details.length + 1),
-                          externpokey    : String(array[p]?.[this.PLANILLA]),
-                          pokey          : String(array[p]?.[this.PLANILLA]),
+                          // externpokey    : String(array[p]?.[this.PLANILLA]),
+                          // pokey          : String(array[p]?.[this.PLANILLA]),
+                          //  pokey          : '',
                           // externpolineno : String(body[k].details.length + 1),
                           LOTTABLE06     : String(array[p]?.[this.Lote])
                       })
@@ -237,12 +243,10 @@ storerkey            : this.propietario,
       }
 
   enviarData(){
-        this.sweel.mensajeConConfirmacion('¿Seguro de enviar Pedidos?', 'Carga de Pedidos','warning').then(
+        this.sweel.mensajeConConfirmacion('¿Seguro de enviar ASN?', 'Carga de ASN','warning').then(
           res =>{
                 if ( res ){
                 if(this.dataMapeada.length > 0){
-           
-                  console.log(JSON.stringify(this.dataapi[0]))
                   this.cargarASN( JSON.stringify(this.dataapi[0])  )
                 }  
                 this.loading2 = false;
@@ -251,30 +255,51 @@ storerkey            : this.propietario,
             )
       }
 
-  Limpieza(){
-        this.sweel.mensajeConConfirmacion("¿Seguro de Limpiar data?","Limpieza","question").then(
-          res=>{
-            if ( res ){
-              // this.proveedoresF = []
-              this.sharedS.CleanDataExcel()
-            }
+  Limpieza( Bandera ?: number){
+
+    if ( Bandera == 1){
+      this.sweel.mensajeConConfirmacion("¿Seguro de Limpiar data?","Limpieza","question").then(
+        res=>{
+          if ( res ){
+            this.sharedS.CleanDataExcel();
+            this.dataMapeada = [];
+            this.dataapi = [];
           }
-        )
+        }
+      )
+    }else{
+      this.sharedS.CleanDataExcel();
+      this.dataMapeada = [];
+      this.dataapi = [];
+    }
+
+    
+
+
       
       }
-
+// PODRIA MANEJARSE EN SERVICIO
   ObtenerToken( propietario ){
+    let contra  : string;
+    let usuario : string;
+    let urlApi     : string;
+
+    contra  = this.PwdPrd;
+    usuario = this.usuarioAuth0;
+    urlApi  =  'https://api-wms.ransaaplicaciones.com/auth/token';
+    this.UrlEnvio = 'https://api-wms.ransaaplicaciones.com/asn'
       let url = '/administracion/auth0';
       let params = {
         usuario : propietario, 
-        contra  : this.contrasena
+        contra  : contra,
+        url     : urlApi
+
       }
 
     this.servicio.post(url,params).subscribe(
       res=>{
         if( res?.data ){
           this.token = res?.data?.access_token
-            //console.log( this.token );
         }else{
           this.toast.mensajeError('Nombre y/o contraseña invalido',"Error")
         }
@@ -287,7 +312,6 @@ storerkey            : this.propietario,
         return 'WHSE52'
       }else{
         return 'WHSE51'
-
       }
     }
 
@@ -296,17 +320,19 @@ storerkey            : this.propietario,
       let url = '/administracion/authLoadAsn';
       let params = {
         data  : JSON.stringify(data),
-        token : this.token
+        token : this.token,
+        url   : this.UrlEnvio
       }
 
     this.servicio.post(url,params).subscribe(
       res=>{
         console.log( res );
-        if( !res?.errors[0] ){
+        if( !res?.hasError ){
           this.toast.mensajeSuccess("ASN'S Enviadas","Envío de ASN")
-            console.log( res );
+            // console.log( res );
+            this.Limpieza(2);
         }else{
-          console.log( res );
+          // console.log( res );
           this.toast.mensajeError(String(res?.errors[0]?.message),"Error")
         }
       }
@@ -325,6 +351,11 @@ storerkey            : this.propietario,
       res =>{
         if( res ){
           this.username = res?.data?.Table0[0]?.usuarioAuth0;
+          this.propietarioQA = res?.data?.Table0[0]?.propietarioQA;
+          this.usuarioAuth0  = res?.data?.Table0[0]?.usuarioAuth0;
+          this.usuarioAuthQA = res?.data?.Table0[0]?.usuarioAuth0QA;
+          this.PwdPrd        = res?.data?.Table0[0]?.pwdPRD;
+          this.PwdQa         = res?.data?.Table0[0]?.pwdQA;
           this.ObtenerToken( this.username );
         }
       }
@@ -347,8 +378,7 @@ storerkey            : this.propietario,
         sku          : string,
         uom          : string,
         externlineno : string,
-        externpokey  : string,
-        pokey        : string,
+        // pokey : string,
         // externpolineno : string,
         LOTTABLE06   : string
       }[],
@@ -368,8 +398,6 @@ storerkey            : this.propietario,
       sku          : string,
       uom          : string,
       externlineno : string,
-      externpokey  : string,
-      pokey        : string,
       // externpolineno : string,
       LOTTABLE06   : string
     }[],

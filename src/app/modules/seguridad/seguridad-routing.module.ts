@@ -17,6 +17,7 @@ import { InforComponent } from './infor/infor.component';
 import { IntegracionesComponent } from './Integraciones/integraciones/integraciones.component';
 import { PedidosComponent } from './Integraciones/pedidos/pedidos.component';
 import { OrdenesComponent } from './Integraciones/ordenes/ordenes.component';
+import { PropietariosComponent } from './Integraciones/propietarios/propietarios.component';
 
 const routes: Routes = [
   {
@@ -86,6 +87,10 @@ const routes: Routes = [
    {
     path : 'ordenesInfor',
     component : OrdenesComponent
+   },
+   {
+    path : 'propietarioInfor',
+    component : PropietariosComponent
    },
 ];
 

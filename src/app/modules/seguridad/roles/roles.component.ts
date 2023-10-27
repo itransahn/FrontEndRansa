@@ -38,7 +38,8 @@ export class RolesComponent implements OnInit, OnDestroy {
     public dialog : MatDialog, 
     private rolService : RolesService, 
     private sweel : SweetAlertService,
-    private toast : ToastServiceLocal  ) { }
+    private toast : ToastServiceLocal 
+     ) { }
 
   ngOnInit() {
     

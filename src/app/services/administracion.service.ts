@@ -255,7 +255,27 @@ return request$
       );
       return request$
     }
-
+  // Servicio de Actualización
+  put( url?:string, params?:any){
+  
+    let request$ = this.http.put<DataApi>(environment.UrlApi + url,params).pipe(
+      tap( ( result:DataApi | any )=>{
+        this.refresh$.next();
+          return result
+      } ),
+      catchError( ( error: HttpErrorResponse) =>{
+        this._mensajesHttp.mostrarErrorHttp(error, String(error.error?.errors[0]['descripcion']), '');
+          return [
+            {
+              data     : error,
+              errors   : error,
+              hasError :  true 
+            }
+          ]
+      })
+    );
+    return request$
+  }
    
 
   /* MENUS ADMINISTRACION -- MENUS */

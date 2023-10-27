@@ -45,7 +45,8 @@ import { MascarasInforComponent } from './infor/mascaras-infor/mascaras-infor.co
 import { IntegracionesComponent } from './Integraciones/integraciones/integraciones.component';
 import { PedidosComponent } from './Integraciones/pedidos/pedidos.component';
 import { OrdenesComponent } from './Integraciones/ordenes/ordenes.component';
-
+import { PropietariosComponent } from './Integraciones/propietarios/propietarios.component';
+import { ModalPropietariosIComponent } from './Integraciones/propietarios/modal-propietarios-i/modal-propietarios-i.component';
 @NgModule({
   declarations: [
     UsuariosComponent,
@@ -89,6 +90,8 @@ import { OrdenesComponent } from './Integraciones/ordenes/ordenes.component';
     IntegracionesComponent,
     PedidosComponent,
     OrdenesComponent,
+    PropietariosComponent,
+    ModalPropietariosIComponent
   ],
   imports: [
     CommonModule,

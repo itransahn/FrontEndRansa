@@ -1,18 +1,21 @@
 <div>
  <form [formGroup]="Cargar">
     <div class="row">
-        <div class="col-md-8">
+
+ 
+        <div class="col-md-8" >
             <mat-form-field appearance="legacy">
                 <mat-label> Propietario </mat-label>
                 <mat-select  formControlName="propietario" (selectionChange)="SetearData($event)" > 
                     <mat-option> - </mat-option> 
-                    <mat-option #tipoLla *ngFor="let tipo of propietarios" [value]="tipo?.propietario">
-                        {{  tipo?.propietario | uppercase }}
+                    <mat-option #tipoLla *ngFor="let tipo of propietarios" [value]="tipo?.[PropietarioCargar]">
+                        {{  tipo?.[PropietarioCargar] | uppercase }}
                     </mat-option> 
                   </mat-select> 
               </mat-form-field>
         </div>
 
+     
         <div class="col-md-12" *ngIf="Cargar.value.propietario">
             <div class="uploadfilecontainer" (click)="fileInput.click()" style="display: flex; justify-content: center; align-items: center;">
                 <h3 class="text-center"> {{sharedS.ExcelName || 'Seleccionar archivo'}} 
@@ -39,7 +42,7 @@
       </div>
       <div class="col-md-6 container">
         <div >
-          <button mat-raised-button class="buttonPrincipal" [hidden]="dataMapeada.length <= 0" (click)="Limpieza()">
+          <button mat-raised-button class="buttonPrincipal" [hidden]="dataMapeada.length <= 0" (click)="Limpieza(1)">
               <mat-icon>
                 clear
               </mat-icon>

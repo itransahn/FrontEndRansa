@@ -84,6 +84,7 @@ export class IntegracionesComponent implements OnInit {
      this.totalUnidades  =  Acumulador(this.dataExcel, 'Unidades');
 
      this.EstructurarBody(this.dataExcel)
+     
        this.loading1 = false
      }
     }
@@ -127,7 +128,9 @@ Limpieza(){
     res=>{
       if ( res ){
         this.proveedoresF = []
-        this.sharedS.CleanDataExcel()
+        this.sharedS.CleanDataExcel();
+        this.dataMapeada = [];
+        this.dataExcel   = [];
       }
     }
   )
@@ -170,7 +173,8 @@ let comprobar2 : boolean = false;
         horaGeneracion       :(new Date().getHours().toString() + new Date().getMinutes().toString() + new Date().getMinutes().toString()),
         fechaServicio        :this.retornarFormatoFecha(1),
         comentario           :'',
-        ValorDeclarado       :array[i]?.[' Valor Facturado '],
+        ValorDeclarado       :array[i]?.[this.valor],
+        MetodoDePago           : 'Contado',
         listaLineasPedido    : [],
             })
     }
@@ -190,7 +194,8 @@ fechaGeneracion      : this.retornarFormatoFecha(0),
 horaGeneracion       :( this.retonar0Fecha(new Date().getHours().toString()) + new Date().getMinutes().toString() + new Date().getMinutes().toString()),
 fechaServicio        :this.retornarFormatoFecha(1),
 comentario           :'',
-ValorDeclarado       :array[i]?.[' Valor Facturado '],
+ValorDeclarado       : array[i]?.[this.valor],
+MetodoDePago           : 'Contado',
 listaLineasPedido    : [],
     })
   }
@@ -247,6 +252,9 @@ listaLineasPedido    : [],
 
  //Cargar data mapeada para mostrar 
 this.dataMapeada = body;
+  console.log(JSON.stringify(this.dataMapeada))
+  console.log(JSON.stringify(body))
+
 }
 
 BuscarTotales(array : any[], buscar : string){
@@ -317,6 +325,7 @@ horaGeneracion  : string,
 fechaServicio   : string,
 comentario      : string,
 ValorDeclarado  : number,
+MetodoDePago      : string,
 listaLineasPedido : {
   numeroLinea         : string,
   codigoArticuloBulto : string,

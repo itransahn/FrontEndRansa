@@ -5,7 +5,7 @@
 export const environment = {
   UrlApi:    'http://localhost:3000/apiRansa/',
   // UrlApi:    'http://10.130.65.146:3000/apiRansa/',
-  WsUrl:     'http://10.130.65.146:3000',
+  WsUrl:     'http://10.130.65.223:3000',
   production: false,
   nombreEmpresa : "RANSA HONDURAS",
   UrlAs400      : 'https://secure.ransa.net/callAS400',

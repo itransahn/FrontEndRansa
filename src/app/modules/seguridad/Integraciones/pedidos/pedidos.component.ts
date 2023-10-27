@@ -15,7 +15,7 @@ import { ToastServiceLocal } from 'src/app/services/toast.service';
 export class PedidosComponent implements OnInit {
 
   public urlQA  : string = 'https://api-wms.qas.ransaaplicaciones.com/order'
-  // public urlPRD : string = 'https://monitortmswms.ransa.net/importar/archivo_ws_json.php'
+  
   public dataExcel   : any[]=[];
   public dataMapeada : any[]= [];
   public dataapi     : order[]= [];
@@ -23,6 +23,36 @@ export class PedidosComponent implements OnInit {
   public contrasena  : string = 'Ransa-360';
   public token       : string = '';
   public propietario : string = '';
+  public propietarioQA : string = '';
+  public usuarioAuth0 : string = '';
+  public usuarioAuthQA : string = '';
+  public UrlEnvio : string = '';
+  public PwdPrd : string = '';
+  public PwdQa  : string = '';
+  public ambienteL = [
+    { id: 1, ambiente : 'QA'},
+    { id: 2, ambiente : 'PRD'},
+  ]
+
+  public PropietarioCargar : string;
+  public usuarioAuth0Cargar : string;
+  public pwdCargar : string;
+
+
+  // public propietarioaCargar(){
+  //   if ( this.Cargar.value.ambiente == 2 ){
+  //       this.PropietarioCargar = 'propietario';
+  //       this.usuarioAuth0Cargar = 'usuarioAuth0';
+  //       this.pwdCargar = 'pwdPRD';
+  //   }
+
+  //   if ( this.Cargar.value.ambiente == 1 ){
+  //     this.PropietarioCargar = 'propietarioQA';
+  //     this.usuarioAuth0Cargar = 'usuarioAuth0QA';
+  //     this.pwdCargar = 'pwdQA';
+  // }
+  // }
+ 
 
     //Parametrizar Columnas 
     public PLANILLA : string = 'PLANILLA';
@@ -69,9 +99,11 @@ export class PedidosComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.parametros();
     this.sharedS.CleanDataExcel()
     this.Cargar = new FormGroup({
-      propietario : new FormControl({ value : '', disabled : false }, [Validators.required])
+      ambiente : new FormControl({ value : '', disabled : false }, [Validators.required]),
+      propietario : new FormControl({ value : '', disabled : false }, [Validators.required]),
     });
     this.filtro = new FormGroup({
       filtrar: new FormControl({ value:'',disabled: false}),
@@ -80,10 +112,17 @@ export class PedidosComponent implements OnInit {
     this.cargarPropietarios();
   }
 
+
+  parametros(){
+    this.PropietarioCargar = 'propietario';
+    this.usuarioAuth0Cargar = 'usuarioAuth0';
+    this.pwdCargar = 'pwdPRD';
+  }
+
 cargarPropietarios(){
     this.servicio.get('administracion/propietariosInt', []).subscribe(
       res=>{
-        this.propietarios = res?.data.Table0
+        this.propietarios = res?.data.Table0;
       }
     )
 }
@@ -91,7 +130,6 @@ cargarPropietarios(){
   SetearData(evt){
   this.propietario = evt?.value;
   this.obtenerUsuario(evt?.value);
-
 }
 
   cargarData(evt){
@@ -273,7 +311,6 @@ cargarPropietarios(){
                   //     this.toast.mensajeInfo(String(res?.Transmision),"Respuesta");
                   //   }
                   // )
-                  console.log(JSON.stringify(this.dataapi[0]))
                   this.cargarPedidos( JSON.stringify(this.dataapi[0])  )
                 }  
                 // this.toast.mensajeSuccess("Data Cargada con éxito","Carga de datos");
@@ -283,30 +320,55 @@ cargarPropietarios(){
             )
       }
 
-   Limpieza(){
-        this.sweel.mensajeConConfirmacion("¿Seguro de Limpiar data?","Limpieza","question").then(
-          res=>{
-            if ( res ){
-              // this.proveedoresF = []
-              this.sharedS.CleanDataExcel()
-            }
-          }
-        )
-      
-      }
+   Limpieza( Bandera ?: number){
 
-    ObtenerToken( propietario ){
+        if ( Bandera == 1){
+          this.sweel.mensajeConConfirmacion("¿Seguro de Limpiar data?","Limpieza","question").then(
+            res=>{
+              if ( res ){
+                this.sharedS.CleanDataExcel();
+                this.dataMapeada = [];
+                this.dataapi = [];
+              }
+            }
+          )
+        }else{
+          this.sharedS.CleanDataExcel();
+          this.dataMapeada = [];
+          this.dataapi = [];
+        } 
+          }
+
+    ObtenerToken( propietario : string ){
+      let contra  : string;
+      let usuario : string;
+      let urlApi     : string;
+
+      // if ( this.Cargar.value.ambiente == 1){
+      //     contra  = this.PwdQa
+      //     usuario = this.usuarioAuthQA
+      //     urlApi  = 'https://api-wms.qas.ransaaplicaciones.com/auth/token';
+      //     this.UrlEnvio = 'https://api-wms.qas.ransaaplicaciones.com/order'
+      // }else{ 
+
+      // }
+      contra  = this.PwdPrd;
+      usuario = this.usuarioAuth0;
+      urlApi  =  'https://api-wms.ransaaplicaciones.com/auth/token';
+      this.UrlEnvio = 'https://api-wms.ransaaplicaciones.com/asn'
+
       let url = '/administracion/auth0';
       let params = {
-        usuario : propietario, 
-        contra  : this.contrasena
+        usuario : usuario, 
+        contra  : contra,
+        url     : urlApi
       }
 
     this.servicio.post(url,params).subscribe(
       res=>{
+        console.log(res)
         if( res?.data ){
-          this.token = res?.data?.access_token
-            //console.log( this.token );
+          this.token = res?.data?.access_token;
         }else{
           this.toast.mensajeError('Nombre y/o contraseña invalido',"Error")
         }
@@ -320,14 +382,15 @@ cargarPropietarios(){
       let url = '/administracion/authLoadOrder';
       let params = {
         data  : JSON.stringify(data),
-        token : this.token
+        token : this.token,
+        url   : this.UrlEnvio
       }
 
     this.servicio.post(url,params).subscribe(
       res=>{
-        if( !res?.errors[0] ){
+        if( !res?.hasError ){
           this.toast.mensajeSuccess("Pedidos Enviados","Envío de pedidos")
-            console.log( res );
+            this.Limpieza(2)
         }else{
           console.log( res );
           this.toast.mensajeError(String(res?.errors[0]?.message),"Error")
@@ -348,12 +411,20 @@ cargarPropietarios(){
       res =>{
         if( res ){
           this.username = res?.data?.Table0[0]?.usuarioAuth0;
+          this.propietarioQA = res?.data?.Table0[0]?.propietarioQA;
+          this.usuarioAuth0  = res?.data?.Table0[0]?.usuarioAuth0;
+          this.usuarioAuthQA = res?.data?.Table0[0]?.usuarioAuth0QA;
+          this.PwdPrd        = res?.data?.Table0[0]?.pwdPRD;
+          this.PwdQa         = res?.data?.Table0[0]?.pwdQA;
           this.ObtenerToken( this.username );
         }
       }
     )
     }
 
+    checkOnClick(tipo : any){
+
+    }
     }
 
 interface order {
