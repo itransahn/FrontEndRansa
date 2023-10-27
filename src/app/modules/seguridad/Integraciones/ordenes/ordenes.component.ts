@@ -326,7 +326,6 @@ storerkey            : this.propietario,
 
     this.servicio.post(url,params).subscribe(
       res=>{
-        console.log( res );
         if( !res?.hasError ){
           this.toast.mensajeSuccess("ASN'S Enviadas","Envío de ASN")
             // console.log( res );
