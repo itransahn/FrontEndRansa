@@ -222,7 +222,7 @@ EstructurarBody( array : any[]){
           shiptogether   : 'N',
           priority       : '3',
           splitshipmentindicator : '0',
-          storekey       : this.propietario,
+          storerkey       : this.propietario,
           details    : [],
               })
       }
@@ -241,7 +241,7 @@ EstructurarBody( array : any[]){
           shiptogether   : 'N',
           priority       : '3',
           splitshipmentindicator : '0',
-          storekey       : this.propietario,
+          storerkey       : this.propietario,
         details    : [],
       })
     }
@@ -457,7 +457,7 @@ clientcode : string,
    shiptogether    : string,
    priority        : string,
    splitshipmentindicator   : string,
-   storekey : string,
+   storerkey : string,
    details : {
     externlinenumber  :  string,
     sku :         string,
@@ -485,7 +485,7 @@ interface orders{
   shiptogether    : string,
   priority        : string,
   splitshipmentindicator   : string,
-  storekey : string,
+  storerkey : string,
   details : {
     externlinenumber  :  string,
     sku :         string,
