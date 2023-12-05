@@ -15,7 +15,7 @@
            <div class="col-md-8" *ngIf="Cargar.value.sede">
                <mat-form-field appearance="legacy">
                    <mat-label> Propietario </mat-label>
-                     <mat-select  formControlName="propietario" > 
+                     <mat-select  formControlName="propietario"  (selectionChange)="SetearData($event)"> 
                          <ng-container *ngFor="let item of propietarios">
                              <div *ngIf="item.sede === Cargar.value.sede">
                                  <mat-option [value]="item?.propietario">

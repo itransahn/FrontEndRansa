@@ -389,7 +389,6 @@ EstructurarBody( array : any[]){
 
 
     cargarPedidos( data  ){
-      console.log(data)
      if(this.dataExcel.length > 0){
       let url = '/administracion/authLoadOrder';
       let params = {
@@ -400,7 +399,6 @@ EstructurarBody( array : any[]){
 
     this.servicio.post(url,params).subscribe(
       res=>{
-        console.log(res)
         if( !res?.hasError ){
           this.toast.mensajeSuccess("Pedidos Enviados","Envío de pedidos")
             this.Limpieza(2)
