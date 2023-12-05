@@ -1,15 +1,30 @@
 <div>
     <form [formGroup]="Cargar">
        <div class="row">
-           <div class="col-md-8">
+        <div class="col-md-4">
+          <mat-form-field appearance="legacy">
+              <mat-label> Sedes </mat-label>
+              <mat-select  formControlName="sede"  > 
+                  <mat-option> - </mat-option> 
+                  <mat-option  #sede *ngFor="let item of sedes" [value]="item?.idSede">
+                      {{  item?.Sede | uppercase }}
+                  </mat-option> 
+                </mat-select> 
+            </mat-form-field>
+      </div>
+           <div class="col-md-8" *ngIf="Cargar.value.sede">
                <mat-form-field appearance="legacy">
                    <mat-label> Propietario </mat-label>
-                   <mat-select  formControlName="propietario" (selectionChange)="SetearData($event)" > 
-                       <mat-option> - </mat-option> 
-                       <mat-option #tipoLla *ngFor="let tipo of propietarios" [value]="tipo?.propietario">
-                           {{  tipo?.propietario | uppercase }}
-                       </mat-option> 
-                     </mat-select> 
+                     <mat-select  formControlName="propietario" > 
+                         <ng-container *ngFor="let item of propietarios">
+                             <div *ngIf="item.sede === Cargar.value.sede">
+                                 <mat-option [value]="item?.propietario">
+                                     {{  item?.propietario | uppercase }}
+                                 </mat-option>
+                             </div>
+                         </ng-container>
+ 
+                       </mat-select> 
                  </mat-form-field>
            </div>
    

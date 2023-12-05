@@ -26,6 +26,17 @@ export class OrdenesComponent implements OnInit {
   public propietario : string = '';
   public UrlEnvio    : string = '';
 
+  public sedes = [
+    {
+      idSede : 1,
+      Sede   : 'Sauce'
+    },
+    {
+      idSede : 2,
+      Sede   : 'Almahsa'
+    }
+  ]
+
 
     //Parametrizar Columnas 
     public PLANILLA : string = 'FACTURA';
@@ -80,7 +91,9 @@ export class OrdenesComponent implements OnInit {
 ngOnInit() {
     this.sharedS.CleanDataExcel()
     this.Cargar = new FormGroup({
-      propietario : new FormControl({ value : '', disabled : false }, [Validators.required])
+      propietario : new FormControl({ value : '', disabled : false }, [Validators.required]),
+      sede        : new FormControl({ value : '', disabled : false }, [Validators.required])
+
     });
     this.filtro = new FormGroup({
       filtrar: new FormControl({ value:'',disabled: false}),
@@ -92,7 +105,8 @@ ngOnInit() {
 cargarPropietarios(){
     this.servicio.get('administracion/propietariosInt', []).subscribe(
       res=>{
-        this.propietarios = res?.data.Table0
+        this.propietarios = res?.data.Table0;
+        console.log(this.propietarios)
       }
     )
 }
@@ -143,24 +157,24 @@ cargarData(evt){
     return (array2.length)
     }
 // Estructurar Json
-  EstructurarBody( array : any[]){
-      let body : ASNS[]=[];
-      let comprobar  : boolean = false; 
-      let comprobar2 : boolean = false; 
-      
-      //recorrer data del Cliente
-          for( let i = 0; i < array.length ; i++){ 
-        if( body.length > 0){
-          comprobar = false;  
-        // Llenado de cabeceras de Pedidos
-          for(let j = 0; j < body.length; j++){
-                if(body[j].externreceiptkey == array[i]?.[this.PLANILLA]){
-                  comprobar = true;
-                  break;
-                }
-          }
-          if ( !comprobar ){
-            body.push({
+EstructurarBody( array : any[]){
+  let body : ASNS[]=[];
+  let comprobar  : boolean = false; 
+  let comprobar2 : boolean = false; 
+  
+  //recorrer data del Cliente
+      for( let i = 0; i < array.length ; i++){ 
+    if( body.length > 0){
+      comprobar = false;  
+    // Llenado de cabeceras de Pedidos
+      for(let j = 0; j < body.length; j++){
+            if(body[j].externreceiptkey == array[i]?.[this.PLANILLA]){
+              comprobar = true;
+              break;
+            }
+      }
+      if ( !comprobar ){
+        body.push({
 expectedreceiptdate  : new Date(),
 externreceiptkey     : String(array[i]?.[this.PLANILLA]),
 suppliercode         : String(array[i]?.[this.DESTINO]),
@@ -169,81 +183,83 @@ scheduledshipdate    : new Date(),
 details    : [],
 whseid               : this.obtenerWh(this.propietario),
 storerkey            : this.propietario,
-                  })
-          }
-        }else{
-          body.push({
-            expectedreceiptdate  : new Date(),
-            externreceiptkey     : String(array[i]?.[this.PLANILLA]),
-            suppliercode         : String(array[i]?.[this.DESTINO]),
-            type                 : '1',
-            scheduledshipdate    : new Date(),
-            details    : [],
-            whseid               : this.obtenerWh(this.propietario),
-            storerkey            : this.propietario,
-          })
-        }
-          }
-        // Recorrer arreglo de pedidos con sus cabeceras mapeadas
-          for (let k = 0; k < body.length; k++){
-              this.loading1 = true
-            //Recorrer nuevamente la data del cliente para llenado de detalle de pedidos (SKU)
-          for(let p = 0; p < array.length; p++){
-                   if(array[p]?.[this.PLANILLA] == body[k]?.externreceiptkey ){
-                      if( body[k].details.length > 0){
-                        let posicion : number;
-                        let cantidad : number;
-                        comprobar2 = false;  
-          //Recorro El arreglo interno de articulos por pedido, para agrupar o consolidar articulos              
-          for (let m = 0; m < body[k].details.length; m++) {
-                          if ( body[k].details[m]['sku'] == array[p]?.[this.CODIGOS]  ){
-                            comprobar2 = true;
-                            posicion  = m
-                            cantidad  = array[p]?.[this.CAJAS] 
-                            // break
-                          } }
-                          if(comprobar2){
-                            body[k].details[posicion]['qtyexpected'] +=  cantidad
-                          }else{
-                            body[k].details.push({
-                              qtyexpected    : Number(array[p]?.[this.CAJAS]),
-                              sku            : String(array[p]?.[this.CODIGOS]),
-                              uom            : 'CJ',
-                              externlineno   : String(body[k].details.length + 1),
-                              // externpokey    : String(array[p]?.[this.PLANILLA]),
-                              // pokey          : String(array[p]?.[this.PLANILLA]),
-                              // externpolineno : String(body[k].details.length + 1),
-                              LOTTABLE06     : String(array[p]?.[this.Lote])
-                          })
-                          }
-      
+              })
+      }
+    }else{
+      body.push({
+        expectedreceiptdate  : new Date(),
+        externreceiptkey     : String(array[i]?.[this.PLANILLA]),
+        suppliercode         : String(array[i]?.[this.DESTINO]),
+        type                 : '1',
+        scheduledshipdate    : new Date(),
+        details    : [],
+        whseid               : this.obtenerWh(this.propietario),
+        storerkey            : this.propietario,
+      })
+    }
+      }
+    // Recorrer arreglo de pedidos con sus cabeceras mapeadas
+      for (let k = 0; k < body.length; k++){
+          this.loading1 = true
+        //Recorrer nuevamente la data del cliente para llenado de detalle de pedidos (SKU)
+      for(let p = 0; p < array.length; p++){
+               if(array[p]?.[this.PLANILLA] == body[k]?.externreceiptkey ){
+                  if( body[k].details.length > 0){
+                    let posicion : number;
+                    let cantidad : number;
+                    comprobar2 = false;  
+      //Recorro El arreglo interno de articulos por pedido, para agrupar o consolidar articulos              
+      for (let m = 0; m < body[k].details.length; m++) {
+                      if ( body[k].details[m]['sku'] == array[p]?.[this.CODIGOS]  ){
+                        comprobar2 = true;
+                        posicion  = m
+                        cantidad  = array[p]?.[this.CAJAS] 
+                        // break
+                      } }
+                      if(comprobar2){
+                        body[k].details[posicion]['qtyexpected'] +=  cantidad
                       }else{
                         body[k].details.push({
                           qtyexpected    : Number(array[p]?.[this.CAJAS]),
                           sku            : String(array[p]?.[this.CODIGOS]),
-                          uom            : 'CJ',
+                          // uom         : 'CJ',
+                          uom         :   String(array[p]?.[this.UOM]),
                           externlineno   : String(body[k].details.length + 1),
                           // externpokey    : String(array[p]?.[this.PLANILLA]),
                           // pokey          : String(array[p]?.[this.PLANILLA]),
-                          //  pokey          : '',
                           // externpolineno : String(body[k].details.length + 1),
                           LOTTABLE06     : String(array[p]?.[this.Lote])
                       })
                       }
-                }
+  
+                  }else{
+                    body[k].details.push({
+                      qtyexpected    : Number(array[p]?.[this.CAJAS]),
+                      sku            : String(array[p]?.[this.CODIGOS]),
+                      // uom         : 'CJ',
+                      uom         :   String(array[p]?.[this.UOM]),
+                      externlineno   : String(body[k].details.length + 1),
+                      // externpokey    : String(array[p]?.[this.PLANILLA]),
+                      // pokey          : String(array[p]?.[this.PLANILLA]),
+                      //  pokey          : '',
+                      // externpolineno : String(body[k].details.length + 1),
+                      LOTTABLE06     : String(array[p]?.[this.Lote])
+                  })
+                  }
             }
         }
-        // Mostrar Pantalla de carga
-        this.loading1 = false;
-        this.dataapi.push({
-       date        : new Date(),
-       society     : '251',
-       clientcode  : 1770142,
-       asn         : body
-        })
-       //Cargar data mapeada para mostrar 
-      this.dataMapeada = body;
-      }
+    }
+    // Mostrar Pantalla de carga
+    this.loading1 = false;
+    this.dataapi.push({
+   date        : new Date(),
+   society     : '251',
+   clientcode  : 1770142,
+   asn         : body
+    })
+   //Cargar data mapeada para mostrar 
+  this.dataMapeada = body;
+  }
 
   enviarData(){
         this.sweel.mensajeConConfirmacion('¿Seguro de enviar ASN?', 'Carga de ASN','warning').then(
@@ -266,13 +282,15 @@ storerkey            : this.propietario,
           if ( res ){
             this.sharedS.CleanDataExcel();
             this.dataMapeada = [];
-            this.dataapi = [];
+      (<HTMLInputElement>document.getElementById("fileInput")).value = ''
+      this.dataapi = [];
           }
         }
       )
     }else{
       this.sharedS.CleanDataExcel();
       this.dataMapeada = [];
+      (<HTMLInputElement>document.getElementById("fileInput")).value = ''
       this.dataapi = [];
     }
 

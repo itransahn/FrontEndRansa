@@ -29,11 +29,17 @@ export class PedidosComponent implements OnInit {
   public UrlEnvio : string = '';
   public PwdPrd : string = '';
   public PwdQa  : string = '';
-  public ambienteL = [
-    { id: 1, ambiente : 'QA'},
-    { id: 2, ambiente : 'PRD'},
-  ]
 
+  public sedes = [
+    {
+      idSede : 1,
+      Sede   : 'Sauce'
+    },
+    {
+      idSede : 2,
+      Sede   : 'Almahsa'
+    }
+  ]
   public PropietarioCargar : string;
   public usuarioAuth0Cargar : string;
   public pwdCargar : string;
@@ -101,10 +107,11 @@ export class PedidosComponent implements OnInit {
 
   ngOnInit() {
     this.parametros();
-    this.sharedS.CleanDataExcel()
+    // this.sharedS.CleanDataExcel()
     this.Cargar = new FormGroup({
-      ambiente : new FormControl({ value : '', disabled : false }, [Validators.required]),
       propietario : new FormControl({ value : '', disabled : false }, [Validators.required]),
+      sede        : new FormControl({ value : '', disabled : false }, [Validators.required])
+
     });
     this.filtro = new FormGroup({
       filtrar: new FormControl({ value:'',disabled: false}),
@@ -184,123 +191,125 @@ cargarPropietarios(){
     return (array2.length)
     }
 // Estructurar Json
-    EstructurarBody( array : any[]){
-      let body : orders[]=[];
-      let comprobar  : boolean = false; 
-      let comprobar2 : boolean = false; 
-      
-      //recorrer data del Cliente
-          for( let i = 0; i < array.length ; i++){ 
-        if( body.length > 0){
-          comprobar = false;  
-        // Llenado de cabeceras de Pedidos
-          for(let j = 0; j < body.length; j++){
-                if(body[j].externorderkey == array[i]?.[this.PLANILLA]){
-                  comprobar = true;
-                  break;
-                }
-          }
-          if ( !comprobar ){
-            body.push({
-              externorderkey : String(array[i]?.[this.PLANILLA]),
-              whseid         : this.obtenerWh(this.propietario),
-              orderdate      : new Date(),
-              type           :'0',
-              consigneekey   : String(array[i]?.[this.DESTINO]),
-              scheduleddelvdate : new Date(),
-              actualdelvdate :    new Date(),
-              deliverydate   : new Date(),
-              plannedshipdate : new Date(),
-              planneddelvdate : new Date(),
-              shiptogether   : 'N',
-              priority       : '3',
-              splitshipmentindicator : '0',
-              storekey       : this.propietario,
-              details    : [],
-                  })
-          }
-        }else{
-          body.push({
-            externorderkey : String(array[i]?.[this.PLANILLA]),
-              whseid         : this.obtenerWh(this.propietario),
-              orderdate      : new Date(),
-              type           :'0',
-              consigneekey   : String(array[i]?.[this.DESTINO]),
-              scheduleddelvdate : new Date(),
-              actualdelvdate :    new Date(),
-              deliverydate   : new Date(),
-              plannedshipdate : new Date(),
-              planneddelvdate : new Date(),
-              shiptogether   : 'N',
-              priority       : '3',
-              splitshipmentindicator : '0',
-              storekey       : this.propietario,
-            details    : [],
-          })
-        }
-          }
-        // Recorrer arreglo de pedidos con sus cabeceras mapeadas
-          for (let k = 0; k < body.length; k++){
-              this.loading1 = true
-            //Recorrer nuevamente la data del cliente para llenado de detalle de pedidos (SKU)
-          for(let p = 0; p < array.length; p++){
-                   if(array[p]?.[this.PLANILLA] == body[k]?.externorderkey ){
-                      if( body[k].details.length > 0){
-                        let posicion : number;
-                        let cantidad : number;
-                        comprobar2 = false;  
-          //Recorro El arreglo interno de articulos por pedido, para agrupar o consolidar articulos              
-          for (let m = 0; m < body[k].details.length; m++) {
-                          if ( body[k].details[m]['sku'] == array[p]?.[this.CODIGOS]  ){
-                            comprobar2 = true;
-                            posicion  = m
-                            cantidad  = Number(array[p]?.[this.CAJAS] )
-                            // break
-                          } }
-                          if(comprobar2){
-                            body[k].details[posicion]['openqty'] +=  cantidad
-                            body[k].details[posicion]['fulfillqty'] +=  cantidad
-                          }else{
-                            body[k].details.push({
-                              externlinenumber  : String(body[k].details.length + 1),
-                              sku               : String(array[p]?.[this.CODIGOS]),
-                              openqty     : Number(array[p]?.[this.CAJAS]),
-                              fulfillqty  : Number(array[p]?.[this.CAJAS]),
-                              uom         : 'CJ',
-                              externlineno  : String(body[k].details.length + 1),
-                              whseid      : this.obtenerWh(this.propietario),
-                              LOTTABLE06  : String(array[p]?.[this.Lote])
-                          })
-                          }
-      
+EstructurarBody( array : any[]){
+  let body : orders[]=[];
+  let comprobar  : boolean = false; 
+  let comprobar2 : boolean = false; 
+  
+  //recorrer data del Cliente
+      for( let i = 0; i < array.length ; i++){ 
+    if( body.length > 0){
+      comprobar = false;  
+    // Llenado de cabeceras de Pedidos
+      for(let j = 0; j < body.length; j++){
+            if(body[j].externorderkey == array[i]?.[this.PLANILLA]){
+              comprobar = true;
+              break;
+            }
+      }
+      if ( !comprobar ){
+        body.push({
+          externorderkey : String(array[i]?.[this.PLANILLA]),
+          whseid         : this.obtenerWh(this.propietario),
+          orderdate      : new Date(),
+          type           :'0',
+          consigneekey   : String(array[i]?.[this.DESTINO]),
+          scheduleddelvdate : new Date(),
+          actualdelvdate :    new Date(),
+          deliverydate   : new Date(),
+          plannedshipdate : new Date(),
+          planneddelvdate : new Date(),
+          shiptogether   : 'N',
+          priority       : '3',
+          splitshipmentindicator : '0',
+          storekey       : this.propietario,
+          details    : [],
+              })
+      }
+    }else{
+      body.push({
+        externorderkey : String(array[i]?.[this.PLANILLA]),
+          whseid         : this.obtenerWh(this.propietario),
+          orderdate      : new Date(),
+          type           :'0',
+          consigneekey   : String(array[i]?.[this.DESTINO]),
+          scheduleddelvdate : new Date(),
+          actualdelvdate :    new Date(),
+          deliverydate   : new Date(),
+          plannedshipdate : new Date(),
+          planneddelvdate : new Date(),
+          shiptogether   : 'N',
+          priority       : '3',
+          splitshipmentindicator : '0',
+          storekey       : this.propietario,
+        details    : [],
+      })
+    }
+      }
+    // Recorrer arreglo de pedidos con sus cabeceras mapeadas
+      for (let k = 0; k < body.length; k++){
+          this.loading1 = true
+        //Recorrer nuevamente la data del cliente para llenado de detalle de pedidos (SKU)
+      for(let p = 0; p < array.length; p++){
+               if(array[p]?.[this.PLANILLA] == body[k]?.externorderkey ){
+                  if( body[k].details.length > 0){
+                    let posicion : number;
+                    let cantidad : number;
+                    comprobar2 = false;  
+      //Recorro El arreglo interno de articulos por pedido, para agrupar o consolidar articulos              
+      for (let m = 0; m < body[k].details.length; m++) {
+                      if ( body[k].details[m]['sku'] == array[p]?.[this.CODIGOS]  ){
+                        comprobar2 = true;
+                        posicion  = m
+                        cantidad  = Number(array[p]?.[this.CAJAS] )
+                        // break
+                      } }
+                      if(comprobar2){
+                        body[k].details[posicion]['openqty'] +=  cantidad
+                        body[k].details[posicion]['fulfillqty'] +=  cantidad
                       }else{
                         body[k].details.push({
                           externlinenumber  : String(body[k].details.length + 1),
-                          sku         : String(array[p]?.[this.CODIGOS]),
+                          sku               : String(array[p]?.[this.CODIGOS]),
                           openqty     : Number(array[p]?.[this.CAJAS]),
                           fulfillqty  : Number(array[p]?.[this.CAJAS]),
-                          uom  : 'CJ',
+                          // uom         : 'CJ',
+                          uom         :   String(array[p]?.[this.UOM]),
                           externlineno  : String(body[k].details.length + 1),
-                          whseid  : this.obtenerWh(this.propietario),
+                          whseid      : this.obtenerWh(this.propietario),
                           LOTTABLE06  : String(array[p]?.[this.Lote])
                       })
                       }
-                }
+  
+                  }else{
+                    body[k].details.push({
+                      externlinenumber  : String(body[k].details.length + 1),
+                      sku         : String(array[p]?.[this.CODIGOS]),
+                      openqty     : Number(array[p]?.[this.CAJAS]),
+                      fulfillqty  : Number(array[p]?.[this.CAJAS]),
+                      // uom         : 'CJ',
+                      uom         :   String(array[p]?.[this.UOM]),
+                      externlineno  : String(body[k].details.length + 1),
+                      whseid  : this.obtenerWh(this.propietario),
+                      LOTTABLE06  : String(array[p]?.[this.Lote])
+                  })
+                  }
             }
         }
-        // Mostrar Pantalla de carga
-        this.loading1 = false;
-        
+    }
+    // Mostrar Pantalla de carga
+    this.loading1 = false;
+    
 
-        this.dataapi.push({
-       date        : new Date(),
-       society : '251',
-       clientcode : '1770142',
-       orders : body
-        })
-       //Cargar data mapeada para mostrar 
-      this.dataMapeada = body;
-      }
+    this.dataapi.push({
+   date        : new Date(),
+   society : '251',
+   clientcode : '1770142',
+   orders : body
+    })
+   //Cargar data mapeada para mostrar 
+  this.dataMapeada = body;
+  }
 
    enviarPedidos(){
         this.sweel.mensajeConConfirmacion('¿Seguro de enviar Pedidos?', 'Carga de Pedidos','warning').then(
@@ -330,6 +339,7 @@ cargarPropietarios(){
                 this.sharedS.CleanDataExcel();
                 this.dataMapeada = [];
                 this.dataapi = [];
+      (<HTMLInputElement>document.getElementById("fileInput")).value = ''
               }
             }
           )
@@ -337,6 +347,7 @@ cargarPropietarios(){
           this.sharedS.CleanDataExcel();
           this.dataMapeada = [];
           this.dataapi = [];
+          (<HTMLInputElement>document.getElementById("fileInput")).value = ''
         } 
           }
 
@@ -356,7 +367,7 @@ cargarPropietarios(){
       contra  = this.PwdPrd;
       usuario = this.usuarioAuth0;
       urlApi  =  'https://api-wms.ransaaplicaciones.com/auth/token';
-      this.UrlEnvio = 'https://api-wms.ransaaplicaciones.com/asn'
+      this.UrlEnvio = 'https://api-wms.ransaaplicaciones.com/order'
 
       let url = '/administracion/auth0';
       let params = {
@@ -378,6 +389,7 @@ cargarPropietarios(){
 
 
     cargarPedidos( data  ){
+      console.log(data)
      if(this.dataExcel.length > 0){
       let url = '/administracion/authLoadOrder';
       let params = {
@@ -388,6 +400,7 @@ cargarPropietarios(){
 
     this.servicio.post(url,params).subscribe(
       res=>{
+        console.log(res)
         if( !res?.hasError ){
           this.toast.mensajeSuccess("Pedidos Enviados","Envío de pedidos")
             this.Limpieza(2)
