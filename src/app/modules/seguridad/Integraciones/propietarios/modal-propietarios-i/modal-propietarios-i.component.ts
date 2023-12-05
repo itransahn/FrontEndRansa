@@ -126,10 +126,10 @@ insertarMenu(){
   this.Service.post(url,params).subscribe(
     res=>{
       if(!res.hasError){
-          if ( res?.data.Table0[0]['codigo'] == -1 ){
-              this.toast.mensajeWarning(String(res?.data.Table0[0]['Mensaje']), mensajes.warning)
+          if ( res?.data.Table0?.[0]?.['codigo'] == -1 ){
+              this.toast.mensajeWarning(String(res?.data?.Table0?.[0]?.['Mensaje']), mensajes.warning)
           }else{
-            this.toast.mensajeSuccess(String(res?.data.Table0[0]['Mensaje']), mensajes.success)
+            this.toast.mensajeSuccess(String(res?.data?.Table0?.[0]?.['Mensaje']), mensajes.success)
             this.dialogRef.close()
           }
       }else{
@@ -154,10 +154,10 @@ let params = {
 this.Service.post( url,params ).subscribe(
   res=>{
     if(!res.hasError){
-        if ( res?.data.Table0[0]['codigo'] == -1 ){
+        if ( res?.data?.Table0?.[0]?.['codigo'] == -1 || !res?.data?.errors[0] ){
             this.toast.mensajeWarning(String(res?.data.Table0[0]['Mensaje']), mensajes.warning)
         }else{
-          this.toast.mensajeSuccess(String(res?.data.Table0[0]['Mensaje']), mensajes.success)
+          this.toast.mensajeSuccess(String(res?.data?.Table0?.[0]?.['Mensaje']), mensajes.success)
           this.dialogRef.close()
         }
     }else{

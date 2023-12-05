@@ -222,7 +222,7 @@ EstructurarBody( array : any[]){
           shiptogether   : 'N',
           priority       : '3',
           splitshipmentindicator : '0',
-          storerkey       : this.propietario,
+          storekey       : this.propietario,
           details    : [],
               })
       }
@@ -241,7 +241,7 @@ EstructurarBody( array : any[]){
           shiptogether   : 'N',
           priority       : '3',
           splitshipmentindicator : '0',
-          storerkey       : this.propietario,
+          storekey       : this.propietario,
         details    : [],
       })
     }
@@ -397,6 +397,7 @@ EstructurarBody( array : any[]){
         url   : this.UrlEnvio
       }
 
+
     this.servicio.post(url,params).subscribe(
       res=>{
         if( !res?.hasError ){
@@ -455,7 +456,7 @@ clientcode : string,
    shiptogether    : string,
    priority        : string,
    splitshipmentindicator   : string,
-   storerkey : string,
+   storekey : string,
    details : {
     externlinenumber  :  string,
     sku :         string,
@@ -483,7 +484,7 @@ interface orders{
   shiptogether    : string,
   priority        : string,
   splitshipmentindicator   : string,
-  storerkey : string,
+  storekey : string,
   details : {
     externlinenumber  :  string,
     sku :         string,
