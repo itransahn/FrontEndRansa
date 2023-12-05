@@ -57,9 +57,10 @@ export class PedidosComponent implements OnInit {
     //Parametrizar Columnas 
     public PLANILLA : string = 'PLANILLA';
     public CODIGOS  : string = 'CODIGOS';
-    public CAJAS    : string = 'CAJAS';
-    public DESTINO  : string = 'DESTINO/PROVEEDOR';
-    public Lote     : string = 'Lote';
+    public CAJAS    : string = 'CANTIDAD';
+    public DESTINO  : string = 'DESTINO';
+    public Lote     : string = 'LOTE';
+    public UOM      : string = 'UDM';
 
 
        //Paginacion

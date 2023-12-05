@@ -25,12 +25,15 @@ export class OrdenesComponent implements OnInit {
   public token       : string = '';
   public propietario : string = '';
   public UrlEnvio    : string = '';
+
+
     //Parametrizar Columnas 
     public PLANILLA : string = 'FACTURA';
     public CODIGOS  : string = 'CODIGOS';
-    public CAJAS    : string = 'CAJAS';
+    public CAJAS    : string = 'CANTIDAD';
     public DESTINO  : string = 'PROVEEDOR';
-    public Lote     : string = 'Lote';
+    public Lote     : string = 'LOTE';
+    public UOM      : string = 'UDM';
 
     public propietarioQA : string = '';
     public usuarioAuth0 : string = '';
