@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { Acumulador } from 'src/app/interfaces/generales';
@@ -98,6 +98,9 @@ export class PedidosComponent implements OnInit {
    public FechaS = this.fecha.getTime() + this.semanaEnMilisegundos;
    public fechaServicio = new Date(this.FechaS);
 
+   @ViewChild('archivoInput') archivoInput: ElementRef<HTMLInputElement>;
+   archivoSeleccionado : File | null = null;
+
   constructor(
     public sharedS  : SharedService,
     public servicio : AdministracionService,
@@ -120,6 +123,38 @@ export class PedidosComponent implements OnInit {
     this.cargarPropietarios();
   }
 
+  onFileChange(event: any): void {
+    // Almacena el archivo seleccionado
+    this.archivoSeleccionado = event.target.files[0];
+  }
+  resetFileInput(){
+    // Resetea el valor del input tipo file
+       // const input = this.archivoInput?.nativeElement;
+       // input.value = '';
+    this.archivoSeleccionado = null;
+  }
+  Limpieza( Bandera ?: number){
+
+    if ( Bandera == 1){
+      this.sweel.mensajeConConfirmacion("¿Seguro de Limpiar data?","Limpieza","question").then(
+        res=>{
+          if ( res ){
+            this.sharedS.CleanDataExcel();
+            this.dataMapeada = [];
+            this.dataapi = [];
+            this.resetFileInput();
+  // (<HTMLInputElement>document.getElementById("fileInput")).value = ''
+          }
+        }
+      )
+    }else{
+      this.sharedS.CleanDataExcel();
+      this.dataMapeada = [];
+      this.dataapi = [];
+      this.resetFileInput()
+      // (<HTMLInputElement>document.getElementById("fileInput")).value = ''
+    } 
+  }
 
   parametros(){
     this.PropietarioCargar = 'propietario';
@@ -258,7 +293,7 @@ EstructurarBody( array : any[]){
                     comprobar2 = false;  
       //Recorro El arreglo interno de articulos por pedido, para agrupar o consolidar articulos              
       for (let m = 0; m < body[k].details.length; m++) {
-                      if ( body[k].details[m]['sku'] == array[p]?.[this.CODIGOS]  ){
+                      if ( body[k].details[m]['sku'] == array[p]?.[this.CODIGOS]  && body[k].details[m]['LOTTABLE06'] == array[p]?.[this.Lote] ){
                         comprobar2 = true;
                         posicion  = m
                         cantidad  = Number(array[p]?.[this.CAJAS] )
@@ -330,27 +365,6 @@ EstructurarBody( array : any[]){
             )
       }
 
-   Limpieza( Bandera ?: number){
-
-        if ( Bandera == 1){
-          this.sweel.mensajeConConfirmacion("¿Seguro de Limpiar data?","Limpieza","question").then(
-            res=>{
-              if ( res ){
-                this.sharedS.CleanDataExcel();
-                this.dataMapeada = [];
-                this.dataapi = [];
-      (<HTMLInputElement>document.getElementById("fileInput")).value = ''
-              }
-            }
-          )
-        }else{
-          this.sharedS.CleanDataExcel();
-          this.dataMapeada = [];
-          this.dataapi = [];
-          (<HTMLInputElement>document.getElementById("fileInput")).value = ''
-        } 
-          }
-
     ObtenerToken( propietario : string ){
       let contra  : string;
       let usuario : string;
@@ -404,7 +418,7 @@ EstructurarBody( array : any[]){
           this.toast.mensajeSuccess("Pedidos Enviados","Envío de pedidos")
             this.Limpieza(2)
         }else{
-          this.toast.mensajeError(String(res?.errors[0]?.message),"Error")
+          this.toast.mensajeError(String(res?.errors),"Error")
         }
       }
     )

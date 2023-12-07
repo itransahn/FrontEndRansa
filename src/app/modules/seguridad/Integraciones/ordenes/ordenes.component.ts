@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { Acumulador } from 'src/app/interfaces/generales';
@@ -81,12 +81,50 @@ export class OrdenesComponent implements OnInit {
    public FechaS = this.fecha.getTime() + this.semanaEnMilisegundos;
    public fechaServicio = new Date(this.FechaS);
 
+   
+   @ViewChild('archivoInput') archivoInput: ElementRef<HTMLInputElement>;
+   archivoSeleccionado : File | null = null;
+
+   
   constructor(
     public sharedS  : SharedService,
     public servicio : AdministracionService,
     public toast    : ToastServiceLocal,
     public sweel    : SweetAlertService
   ) { }
+
+  onFileChange(event: any): void {
+    // Almacena el archivo seleccionado
+    this.archivoSeleccionado = event.target.files[0];
+  }
+  resetFileInput(){
+    // Resetea el valor del input tipo file
+       // const input = this.archivoInput?.nativeElement;
+       // input.value = '';
+    this.archivoSeleccionado = null;
+  }
+  Limpieza( Bandera ?: number){
+
+    if ( Bandera == 1){
+      this.sweel.mensajeConConfirmacion("¿Seguro de Limpiar data?","Limpieza","question").then(
+        res=>{
+          if ( res ){
+            this.sharedS.CleanDataExcel();
+            this.dataMapeada = [];
+            this.dataapi = [];
+            this.resetFileInput();
+  // (<HTMLInputElement>document.getElementById("fileInput")).value = ''
+          }
+        }
+      )
+    }else{
+      this.sharedS.CleanDataExcel();
+      this.dataMapeada = [];
+      this.dataapi = [];
+      this.resetFileInput()
+      // (<HTMLInputElement>document.getElementById("fileInput")).value = ''
+    } 
+  }
 
 ngOnInit() {
     this.sharedS.CleanDataExcel()
@@ -106,7 +144,6 @@ cargarPropietarios(){
     this.servicio.get('administracion/propietariosInt', []).subscribe(
       res=>{
         this.propietarios = res?.data.Table0;
-        console.log(this.propietarios)
       }
     )
 }
@@ -210,7 +247,7 @@ storerkey            : this.propietario,
                     comprobar2 = false;  
       //Recorro El arreglo interno de articulos por pedido, para agrupar o consolidar articulos              
       for (let m = 0; m < body[k].details.length; m++) {
-                      if ( body[k].details[m]['sku'] == array[p]?.[this.CODIGOS]  ){
+                      if ( body[k].details[m]['sku'] == array[p]?.[this.CODIGOS]  && body[k].details[m]['LOTTABLE06'] == array[p]?.[this.Lote] ){
                         comprobar2 = true;
                         posicion  = m
                         cantidad  = array[p]?.[this.CAJAS] 
@@ -261,7 +298,7 @@ storerkey            : this.propietario,
   this.dataMapeada = body;
   }
 
-  enviarData(){
+enviarData(){
         this.sweel.mensajeConConfirmacion('¿Seguro de enviar ASN?', 'Carga de ASN','warning').then(
           res =>{
                 if ( res ){
@@ -274,31 +311,7 @@ storerkey            : this.propietario,
             )
       }
 
-  Limpieza( Bandera ?: number){
 
-    if ( Bandera == 1){
-      this.sweel.mensajeConConfirmacion("¿Seguro de Limpiar data?","Limpieza","question").then(
-        res=>{
-          if ( res ){
-            this.sharedS.CleanDataExcel();
-            this.dataMapeada = [];
-      (<HTMLInputElement>document.getElementById("fileInput")).value = ''
-      this.dataapi = [];
-          }
-        }
-      )
-    }else{
-      this.sharedS.CleanDataExcel();
-      this.dataMapeada = [];
-      (<HTMLInputElement>document.getElementById("fileInput")).value = ''
-      this.dataapi = [];
-    }
-
-    
-
-
-      
-      }
 // PODRIA MANEJARSE EN SERVICIO
   ObtenerToken( propietario ){
     let contra  : string;
@@ -349,10 +362,8 @@ storerkey            : this.propietario,
       res=>{
         if( !res?.hasError ){
           this.toast.mensajeSuccess("ASN'S Enviadas","Envío de ASN")
-            // console.log( res );
             this.Limpieza(2);
         }else{
-          // console.log( res );
           this.toast.mensajeError(String(res?.errors[0]?.message),"Error")
         }
       }

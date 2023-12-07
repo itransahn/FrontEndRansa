@@ -35,7 +35,7 @@
             <div class="uploadfilecontainer" (click)="fileInput.click()" style="display: flex; justify-content: center; align-items: center;">
                 <h3 class="text-center"> {{sharedS.ExcelName || 'Seleccionar archivo'}} 
                 </h3>
-                <input type="file" #fileInput hidden (change)="cargarData($event)" [disabled]="sharedS.ExcelName" required>
+                <input type="file" #fileInput hidden (change)="cargarData($event)" [disabled]="sharedS.ExcelName"  (change)="onFileChange($event)" required>
                 <mat-icon class="iconM" *ngIf="!sharedS.ExcelName">  attach_file </mat-icon>
                 <mat-icon class="iconM" *ngIf="sharedS.ExcelName" >  bar_chart   </mat-icon>
 
