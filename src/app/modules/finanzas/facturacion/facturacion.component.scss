@@ -595,10 +595,10 @@ thead{
 }
 
 .firma{
-	margin-top: 60px;
+	margin-top: 0px !important;
 }
 .pertenece{
-	margin-top: 20px;
+	margin-top: 0px !important;
 }
 
 .container2{
@@ -609,3 +609,20 @@ thead{
     justify-content: right;
     align-items: center;
 }
+
+
+.firmaIL{
+	width:  120px;
+	height: 120px;
+	z-index: 2;
+	position: relative;
+	left: 11px;
+	}	
+
+	.firmaIR{
+	width:  150px;
+	height: 120px;
+	position: relative;
+	// top : 5px;
+	// z-index: 2;
+	}

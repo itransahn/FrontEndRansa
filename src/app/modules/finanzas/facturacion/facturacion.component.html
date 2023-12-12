@@ -47,7 +47,7 @@
     </mat-card>
 </div>
 
-<div class="container padre herencia"  id="Factura" *ngIf="DcabeceraF.length >= 1 && loading1 && loading2 && cabeceraF.length >= 1 && permitido">
+<div class="container padre herencia"  id="Factura"     *ngIf="DcabeceraF.length >= 1 && loading1 && loading2 && cabeceraF.length >= 1 && permitido">
     <mat-card class="cardPersonalizada mt-8">
         <div class="row">
         <div class="col-md-6">
@@ -438,7 +438,7 @@
              </tr>
 <!--     
              <tr >
-                 <th  colspan="3" style="padding-top: 7%;" class=" footE center legend"> FIRMA Y SELLO DEL CIENTE</th>
+                 <th  colspan="3" style="padding-top: 7%;" class=" footE center legend"> FIRMA Y SELLO</th>
                  <th  colspan="3" class=" footE rigth legend"> LA FACTURA ES BENEFICIO DE TODOS, EXIJALA</th>
              </tr> -->
 
@@ -447,9 +447,16 @@
                </div>
         </div>
         </div>
-        <div class="row" style="margin-top: 5% !important">
+        <div class="row" style="margin-top: 0.5% !important">
+            <div class="container" style="width: 100%;">
+              <img class="firmaIL" src="../../../../../assets/images/FirmaDigital.PNG" alt="">
+              <img class="firmaIR" src="../../../../../assets/images/selloRansa.PNG" alt="">
+            </div>
+        </div>
+
+        <div class="row" style="z-index: 100;">
             <div class="col-md 12 firma container footL">
-                <label class="center">  FIRMA Y SELLO DEL CIENTE </label>
+                <label class="center">  FIRMA Y SELLO </label>
             </div>
             <div class="col-md-12 container pertenece footL">
                 <label class="center">  ORIGINAL-CLIENTE, DUPLICADO-OBLIGADO TRIBUTARIO EMISOR,TRIPLICADO-ARCHIVO </label>
@@ -865,7 +872,7 @@
      </tr>
 <!--     
      <tr >
-         <th  colspan="3" style="padding-top: 7%;" class=" footE center legend"> FIRMA Y SELLO DEL CIENTE</th>
+         <th  colspan="3" style="padding-top: 7%;" class=" footE center legend"> FIRMA Y SELLO</th>
          <th  colspan="3" class=" footE rigth legend"> LA FACTURA ES BENEFICIO DE TODOS, EXIJALA</th>
      </tr> -->
 
@@ -873,9 +880,12 @@
                   </table>
                </div>
         </div>
-            <div class="row" style="margin-top: 5% !important">
+
+
+  
+            <div class="row" style="margin-top: 5% !important; z-index: 100;">
                 <div class="col-md 12 firma  container footL">
-                    <label class="center">  FIRMA Y SELLO DEL CIENTE </label>
+                    <label class="center">  FIRMA Y SELLO </label>
                 </div>
                 <div class="col-md-12 container pertenece  footL">
                     <label class="center"> ORIGINAL-CLIENTE, DUPLICADO-OBLIGADO TRIBUTARIO EMISOR,TRIPLICADO-ARCHIVO </label>
@@ -1292,7 +1302,7 @@
      </tr>
 <!--     
      <tr >
-         <th  colspan="3" style="padding-top: 7%;" class=" footE center legend"> FIRMA Y SELLO DEL CIENTE</th>
+         <th  colspan="3" style="padding-top: 7%;" class=" footE center legend"> FIRMA Y SELLO</th>
          <th  colspan="3" class=" footE rigth legend"> LA FACTURA ES BENEFICIO DE TODOS, EXIJALA</th>
      </tr> -->
 
@@ -1300,9 +1310,11 @@
                       </table>
                    </div>
             </div>
-                <div class="row" style="margin-top: 5% !important">
+
+        
+            <div class="row" style="margin-top: 5% !important; z-index: 100;">
                     <div class="col-md 12 firma  container footL">
-                        <label class="center">  FIRMA Y SELLO DEL CIENTE </label>
+                        <label class="center">  FIRMA Y SELLO </label>
                     </div>
                     <!-- <div class="col-md-12 container pertenece  footL">
                         <label class="center"> DUPLICADO: OBLIGADO TRIBUTARIO EMISOR </label>

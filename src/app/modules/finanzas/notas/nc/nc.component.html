@@ -275,15 +275,23 @@
     </div>
 
 <div class="row" style="margin-top: 10% !important;">
-    <div class="col-md-6 mt-4 mb-4 empresa" >
+    <div class="col-md-4 mt-4 mb-4 empresa" >
         <p class="black "> 
-           __________________________________________ <br>
-                   <span style="margin-left: 22%;" class="black ">    Elaborado por </span>
+           _____________________________________ <br>
+                   <span style="margin-left: 35%;" class="black ">    Elaborado por </span>
         </p>
        </div>
+
+       <div class="container col-md-4" style="width: 100%;">
+        <img *ngIf="sede == 1"  class="firmaIL" src="../../../../../assets/images/FirmaDigital.PNG" alt="">
+        <img *ngIf="sede == 1" class="firmaIR" src="../../../../../assets/images/selloRansa.PNG" alt="">
+
+        <img *ngIf="sede == 2"  class="firmaIL" src="../../../../../assets/images/FirmaDigital.PNG" alt="">
+        <img *ngIf="sede == 2"  class="firmaIR" src="../../../../../assets/images/almahsaSello.jpg" alt="">
+      </div>
        
-       <div class="col-md-6 black empresa mt-4 mb-4 empresa" style="text-align: right;" >
-        __________________________________________ <br>
+       <div class="col-md-4 black empresa mt-4 mb-4 empresa" style="text-align: right;" >
+        _____________________________________ <br>
 
                <span style="margin-right: 22%;" class="black ">   Recibí Conforme  </span>
 

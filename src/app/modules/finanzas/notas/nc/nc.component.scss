@@ -390,3 +390,22 @@ table{
 			width:  200px !important;
 			height: 70px !important;
 		}
+
+
+		.firmaIL{
+			width:  120px;
+			height: 120px;
+			z-index: 2;
+			position: relative;
+			left: 10px;
+			bottom: 50px !important;
+			}	
+		
+			.firmaIR{
+			width:  150px;
+			height: 120px;
+			position: relative;
+			// top : 5px;
+			// z-index: 2;
+			bottom: 50px !important;
+			}
