@@ -45,19 +45,7 @@ export class PedidosComponent implements OnInit {
   public pwdCargar : string;
 
 
-  // public propietarioaCargar(){
-  //   if ( this.Cargar.value.ambiente == 2 ){
-  //       this.PropietarioCargar = 'propietario';
-  //       this.usuarioAuth0Cargar = 'usuarioAuth0';
-  //       this.pwdCargar = 'pwdPRD';
-  //   }
-
-  //   if ( this.Cargar.value.ambiente == 1 ){
-  //     this.PropietarioCargar = 'propietarioQA';
-  //     this.usuarioAuth0Cargar = 'usuarioAuth0QA';
-  //     this.pwdCargar = 'pwdQA';
-  // }
-  // }
+ 
  
 
     //Parametrizar Columnas 
@@ -293,7 +281,7 @@ EstructurarBody( array : any[]){
                     comprobar2 = false;  
       //Recorro El arreglo interno de articulos por pedido, para agrupar o consolidar articulos              
       for (let m = 0; m < body[k].details.length; m++) {
-                      if ( body[k].details[m]['sku'] == array[p]?.[this.CODIGOS]  && body[k].details[m]['LOTTABLE06'] == array[p]?.[this.Lote] ){
+                      if ( body[k].details[m]['sku'] == array[p]?.[this.CODIGOS]  && body[k].details[m]['lottable06'] == array[p]?.[this.Lote] ){
                         comprobar2 = true;
                         posicion  = m
                         cantidad  = Number(array[p]?.[this.CAJAS] )
@@ -312,7 +300,7 @@ EstructurarBody( array : any[]){
                           uom         :   String(array[p]?.[this.UOM]),
                           externlineno  : String(body[k].details.length + 1),
                           whseid      : this.obtenerWh(this.propietario),
-                          LOTTABLE06  : String(array[p]?.[this.Lote])
+                          lottable06  : String(array[p]?.[this.Lote])
                       })
                       }
   
@@ -326,7 +314,7 @@ EstructurarBody( array : any[]){
                       uom         :   String(array[p]?.[this.UOM]),
                       externlineno  : String(body[k].details.length + 1),
                       whseid  : this.obtenerWh(this.propietario),
-                      LOTTABLE06  : String(array[p]?.[this.Lote])
+                      lottable06  : String(array[p]?.[this.Lote])
                   })
                   }
             }
@@ -479,7 +467,7 @@ clientcode : string,
     uom :         string ,
     externlineno: string,
     whseid :      string,
-    LOTTABLE06 : string
+    lottable06 : string
   }[]
 }[]
 }
@@ -507,7 +495,7 @@ interface orders{
     uom :         string ,
     externlineno: string,
     whseid :      string,
-    LOTTABLE06 : string
+    lottable06 : string
   }[]
   }
 
