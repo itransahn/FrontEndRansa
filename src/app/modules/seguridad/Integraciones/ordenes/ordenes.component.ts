@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
+import { validarVacio } from 'src/app/data/data';
 import { Acumulador } from 'src/app/interfaces/generales';
 import { SharedService } from 'src/app/modules/shared/shared.service';
 import { AdministracionService } from 'src/app/services/administracion.service';
@@ -265,7 +266,7 @@ storerkey            : this.propietario,
                           // externpokey    : String(array[p]?.[this.PLANILLA]),
                           // pokey          : String(array[p]?.[this.PLANILLA]),
                           // externpolineno : String(body[k].details.length + 1),
-                          lottable06     : String(array[p]?.[this.Lote])
+                          lottable06     : validarVacio(String(array[p]?.[this.Lote]))
                       })
                       }
   
@@ -280,7 +281,7 @@ storerkey            : this.propietario,
                       // pokey          : String(array[p]?.[this.PLANILLA]),
                       //  pokey          : '',
                       // externpolineno : String(body[k].details.length + 1),
-                      lottable06     : String(array[p]?.[this.Lote])
+                      lottable06     : validarVacio(String(array[p]?.[this.Lote]))
                   })
                   }
             }

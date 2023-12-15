@@ -51,8 +51,14 @@ const mesesd = () =>{
     }
     ]
 }
-
+const validarVacio = ( cadena?:string) =>{
+    if( cadena != 'undefined' ){
+        return cadena
+      }else{
+          return null }
+}
 
 export{
-    mesesd
+    mesesd,
+    validarVacio
 }

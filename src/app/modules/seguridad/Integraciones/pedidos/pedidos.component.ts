@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
+import { validarVacio } from 'src/app/data/data';
 import { Acumulador } from 'src/app/interfaces/generales';
 import { SharedService } from 'src/app/modules/shared/shared.service';
 import { AdministracionService } from 'src/app/services/administracion.service';
@@ -300,7 +301,7 @@ EstructurarBody( array : any[]){
                           uom         :   String(array[p]?.[this.UOM]),
                           externlineno  : String(body[k].details.length + 1),
                           whseid      : this.obtenerWh(this.propietario),
-                          lottable06  : String(array[p]?.[this.Lote])
+                          lottable06  : validarVacio(String(array[p]?.[this.Lote]))
                       })
                       }
   
@@ -314,7 +315,7 @@ EstructurarBody( array : any[]){
                       uom         :   String(array[p]?.[this.UOM]),
                       externlineno  : String(body[k].details.length + 1),
                       whseid  : this.obtenerWh(this.propietario),
-                      lottable06  : String(array[p]?.[this.Lote])
+                      lottable06  : validarVacio(String(array[p]?.[this.Lote]))
                   })
                   }
             }
