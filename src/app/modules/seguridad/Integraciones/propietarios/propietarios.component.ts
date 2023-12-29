@@ -22,10 +22,10 @@ export class PropietariosComponent implements OnInit {
   public pageEvent : PageEvent;
   public pageIndex : number = 0;
   public desde = 0;
-  public hasta = 10;
+  public hasta = 50;
   nextPageLabel     = 'Página Siguiente';
   previousPageLabel = 'Página Anterior';
-  public pageSize   = 10;
+  public pageSize   = 50;
   public parametrosBusqueda = ['propietario', 'SEDEF'];
   public filter :string  = '';
   public filtro : FormGroup;
@@ -97,7 +97,7 @@ cargarData(){
       maxWidth: 'auto',
       data: { 
         bandera : accion,
-        id      : data?.ID,
+        id      : data?.id,
         propietario    : data?.propietario,
         usuarioAuth0   : data?.usuarioAuth0,
         propietarioQA  : data?.propietarioQA,

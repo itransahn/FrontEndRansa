@@ -111,7 +111,11 @@ this.dataForm.setValue({
 })
 }
 
-insertarMenu(){
+validarSede(propietario:string){
+  if (propietario.includes('SPS')) { return 2}else{ return 1} 
+}
+
+insertarPropietario(){
   let url    = 'administracion/CpropietariosInt';
   let params = {
     tipo           : 1,
@@ -122,6 +126,7 @@ insertarMenu(){
     usuarioAuth0QA : this.dataForm.value.usuarioAuth0QA,
     pwdPRD         : this.dataForm.value.pwdQA,
     pwdQA          : this.dataForm.value.pwPRD, 
+    sede           : this.validarSede(this.dataForm.value.propietario)
   } 
   this.Service.post(url,params).subscribe(
     res=>{
@@ -139,7 +144,7 @@ insertarMenu(){
   )
 }
 
-actualizarMenu(){
+actualizarPropietario(){
 let url    = 'administracion/CpropietariosInt';
 let params = {
   tipo           : 2,
@@ -150,11 +155,12 @@ let params = {
   usuarioAuth0QA : this.dataForm.value.usuarioAuth0QA,
   pwdPRD         : this.dataForm.value.pwdQA,
   pwdQA          : this.dataForm.value.pwPRD, 
+  sede           : this.validarSede(this.dataForm.value.propietario)
 } 
 this.Service.post( url,params ).subscribe(
   res=>{
     if(!res.hasError){
-        if ( res?.data?.Table0?.[0]?.['codigo'] == -1 || !res?.data?.errors[0] ){
+        if ( res?.data?.Table0?.[0]?.['codigo'] == -1 ){
             this.toast.mensajeWarning(String(res?.data.Table0[0]['Mensaje']), mensajes.warning)
         }else{
           this.toast.mensajeSuccess(String(res?.data?.Table0?.[0]?.['Mensaje']), mensajes.success)
@@ -170,11 +176,11 @@ this.Service.post( url,params ).subscribe(
 submit(){
 
   if( this.data['bandera'] == 2 ){
-    this.insertarMenu()
+    this.insertarPropietario()
   }
 
   if( this.data['bandera'] == 3 ){
-    this.actualizarMenu()
+    this.actualizarPropietario()
   }
 }
 

@@ -65,7 +65,6 @@ private sub : Subscription = new Subscription();
     };
     this.transporteService.get(url,params).subscribe(
       (data : DataApi | any) =>{
-        console.log(data)
         if( !data.hasError ){
           this.pases = data?.data?.Table0;
         }    

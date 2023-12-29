@@ -17,7 +17,8 @@ export class LoginComponent implements OnInit {
   public modules : any[]= [];
   public hide: boolean = true;
   public flat: boolean = true;
-  constructor(public sweet : SweetAlertService, public login: AuthService, private toast : ToastServiceLocal ,
+  constructor(public sweet : SweetAlertService, 
+    public login: AuthService, private toast : ToastServiceLocal ,
      private auth :AuthService) {
     this.loginForm = new FormGroup({});
     this.login.leave()
