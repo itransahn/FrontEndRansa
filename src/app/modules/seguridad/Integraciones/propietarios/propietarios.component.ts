@@ -25,7 +25,7 @@ export class PropietariosComponent implements OnInit {
   public hasta = 50;
   nextPageLabel     = 'Página Siguiente';
   previousPageLabel = 'Página Anterior';
-  public pageSize   = 50;
+  public pageSize   = 25;
   public parametrosBusqueda = ['propietario', 'SEDEF'];
   public filter :string  = '';
   public filtro : FormGroup;

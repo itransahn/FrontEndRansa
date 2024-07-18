@@ -3,8 +3,8 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  UrlApi:    'http://localhost:3000/apiRansa/',
-  // UrlApi:    'http://10.130.65.146:3000/apiRansa/',
+  // UrlApi:    'http://localhost:3000/apiRansa/',
+  UrlApi:    'http://10.130.65.223:3000/apiRansa/',
   WsUrl:     'http://10.130.65.223:3000',
   production: false,
   nombreEmpresa : "RANSA HONDURAS",
