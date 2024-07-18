@@ -304,7 +304,7 @@ EstructurarBody( array : any[]){
                           uom         :   String(array[p]?.[this.UOM]),
                           externlineno  : String(body[k].details.length + 1),
                           whseid      : this.almacen, //this.obtenerWh(this.propietario),
-                          idrequired  : validarVacio(String(array[p]?.['ETIQUETA'])),
+                          idrequired  : validarVacio(String(array[p]?.['ETIQUETA'])),//carga de valores
                           lottable09  : validarVacio(String(array[p]?.['CONTENEDOR'])),
                           lottable06  : validarVacio(String(array[p]?.[this.Lote]))
                       })
@@ -320,7 +320,7 @@ EstructurarBody( array : any[]){
                       uom         :   String(array[p]?.[this.UOM]),
                       externlineno  : String(body[k].details.length + 1),
                       whseid  : this.almacen ,//this.obtenerWh(this.propietario),
-                      idrequired  : validarVacio(String(array[p]?.['ETIQUETA'])),
+                      idrequired  : validarVacio(String(array[p]?.['ETIQUETA'])),//carga de valores
                       lottable09  : validarVacio(String(array[p]?.['CONTENEDOR'])),
                       lottable06  : validarVacio(String(array[p]?.[this.Lote]))
                   })
