@@ -30,6 +30,7 @@ export class PedidosComponent implements OnInit {
   public UrlEnvio : string = '';
   public PwdPrd : string = '';
   public PwdQa  : string = '';
+  public almacen : string;
 
   public sedes = [
     {
@@ -39,15 +40,15 @@ export class PedidosComponent implements OnInit {
     {
       idSede : 2,
       Sede   : 'Almahsa'
+    },
+    {
+      idSede : 3,
+      Sede   : 'Frio'
     }
   ]
   public PropietarioCargar : string;
   public usuarioAuth0Cargar : string;
   public pwdCargar : string;
-
-
- 
- 
 
     //Parametrizar Columnas 
     public PLANILLA : string = 'PLANILLA';
@@ -56,7 +57,7 @@ export class PedidosComponent implements OnInit {
     public DESTINO  : string = 'DESTINO';
     public Lote     : string = 'LOTE';
     public UOM      : string = 'UDM';
-
+    public LPNS     : String = 'ETIQUETA';
 
        //Paginacion
    public page = 0;
@@ -81,6 +82,7 @@ export class PedidosComponent implements OnInit {
    public totalPedidos  : number = 0;
    public totalDestinos : number = 0;
    public totalbultos   : number = 0;
+   public totaletiqueta : number = 0;
 
    public fecha = new Date()
    public semanaEnMilisegundos = 1000 * 60 * 60 * 24 * 2;
@@ -174,6 +176,7 @@ cargarPropietarios(){
        this.totalPedidos   =  this.BuscarTotales(this.dataExcel, this.PLANILLA);
        this.totalDestinos   =  this.BuscarTotales(this.dataExcel, this.DESTINO);
        this.totalbultos  =  Acumulador(this.dataExcel, this.CAJAS);
+       this.totaletiqueta = this.BuscarTotales(this.dataExcel, 'ETIQUETA');
   
        this.EstructurarBody(this.dataExcel)
          this.loading1 = false
@@ -234,7 +237,7 @@ EstructurarBody( array : any[]){
       if ( !comprobar ){
         body.push({
           externorderkey : String(array[i]?.[this.PLANILLA]),
-          whseid         : this.obtenerWh(this.propietario),
+          whseid         : this.almacen, //this.obtenerWh(this.propietario),
           orderdate      : new Date(),
           type           :'0',
           consigneekey   : String(array[i]?.[this.DESTINO]),
@@ -253,7 +256,7 @@ EstructurarBody( array : any[]){
     }else{
       body.push({
         externorderkey : String(array[i]?.[this.PLANILLA]),
-          whseid         : this.obtenerWh(this.propietario),
+          whseid         : this.almacen, //this.obtenerWh(this.propietario),
           orderdate      : new Date(),
           type           :'0',
           consigneekey   : String(array[i]?.[this.DESTINO]),
@@ -275,14 +278,14 @@ EstructurarBody( array : any[]){
           this.loading1 = true
         //Recorrer nuevamente la data del cliente para llenado de detalle de pedidos (SKU)
       for(let p = 0; p < array.length; p++){
-               if(array[p]?.[this.PLANILLA] == body[k]?.externorderkey ){
+               if(array[p]?.[this.PLANILLA] == body[k]?.externorderkey && array[p]?.[this.CAJAS]>0){
                   if( body[k].details.length > 0){
                     let posicion : number;
                     let cantidad : number;
                     comprobar2 = false;  
       //Recorro El arreglo interno de articulos por pedido, para agrupar o consolidar articulos              
       for (let m = 0; m < body[k].details.length; m++) {
-                      if ( body[k].details[m]['sku'] == array[p]?.[this.CODIGOS]  && body[k].details[m]['lottable06'] == array[p]?.[this.Lote] ){
+                      if ( body[k].details[m]['sku'] == array[p]?.[this.CODIGOS]  && body[k].details[m]['lottable06'] == array[p]?.[this.Lote] && body[k].details[m]['idrequired'] == array[p]?.['ETIQUETA'] && body[k].details[m]['lottable09'] == array[p]?.['CONTENEDOR']){
                         comprobar2 = true;
                         posicion  = m
                         cantidad  = Number(array[p]?.[this.CAJAS] )
@@ -300,7 +303,9 @@ EstructurarBody( array : any[]){
                           // uom         : 'CJ',
                           uom         :   String(array[p]?.[this.UOM]),
                           externlineno  : String(body[k].details.length + 1),
-                          whseid      : this.obtenerWh(this.propietario),
+                          whseid      : this.almacen, //this.obtenerWh(this.propietario),
+                          idrequired  : validarVacio(String(array[p]?.['ETIQUETA'])),
+                          lottable09  : validarVacio(String(array[p]?.['CONTENEDOR'])),
                           lottable06  : validarVacio(String(array[p]?.[this.Lote]))
                       })
                       }
@@ -314,7 +319,9 @@ EstructurarBody( array : any[]){
                       // uom         : 'CJ',
                       uom         :   String(array[p]?.[this.UOM]),
                       externlineno  : String(body[k].details.length + 1),
-                      whseid  : this.obtenerWh(this.propietario),
+                      whseid  : this.almacen ,//this.obtenerWh(this.propietario),
+                      idrequired  : validarVacio(String(array[p]?.['ETIQUETA'])),
+                      lottable09  : validarVacio(String(array[p]?.['CONTENEDOR'])),
                       lottable06  : validarVacio(String(array[p]?.[this.Lote]))
                   })
                   }
@@ -430,7 +437,9 @@ EstructurarBody( array : any[]){
           this.usuarioAuthQA = res?.data?.Table0[0]?.usuarioAuth0QA;
           this.PwdPrd        = res?.data?.Table0[0]?.pwdPRD;
           this.PwdQa         = res?.data?.Table0[0]?.pwdQA;
+          this.almacen       = res?.data?.Table0[0]?.WM;
           this.ObtenerToken( this.username );
+         // console.log(res)
         }
       }
     )
@@ -468,6 +477,8 @@ clientcode : string,
     uom :         string ,
     externlineno: string,
     whseid :      string,
+    idrequired : string,
+    lottable09 : string,
     lottable06 : string
   }[]
 }[]
@@ -496,6 +507,8 @@ interface orders{
     uom :         string ,
     externlineno: string,
     whseid :      string,
+    idrequired : string,
+    lottable09 : string,
     lottable06 : string
   }[]
   }

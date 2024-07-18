@@ -35,6 +35,10 @@ export class OrdenesComponent implements OnInit {
     {
       idSede : 2,
       Sede   : 'Almahsa'
+    },
+    {
+      idSede : 3,
+      Sede   : 'Frio'
     }
   ]
 
@@ -52,7 +56,7 @@ export class OrdenesComponent implements OnInit {
     public usuarioAuthQA : string = '';
     public PwdPrd : string = '';
     public PwdQa  : string = '';
-
+    public almacen : string;
        //Paginacion
    public page = 0;
    public pageEvent : PageEvent;
@@ -219,7 +223,7 @@ suppliercode         : String(array[i]?.[this.DESTINO]),
 type                 : '1',
 scheduledshipdate    : new Date(),
 details    : [],
-whseid               : this.obtenerWh(this.propietario),
+whseid               : this.almacen, //this.obtenerWh(this.propietario),
 storerkey            : this.propietario,
               })
       }
@@ -231,7 +235,7 @@ storerkey            : this.propietario,
         type                 : '1',
         scheduledshipdate    : new Date(),
         details    : [],
-        whseid               : this.obtenerWh(this.propietario),
+        whseid               : this.almacen,//this.obtenerWh(this.propietario),
         storerkey            : this.propietario,
       })
     }
@@ -248,7 +252,7 @@ storerkey            : this.propietario,
                     comprobar2 = false;  
       //Recorro El arreglo interno de articulos por pedido, para agrupar o consolidar articulos              
       for (let m = 0; m < body[k].details.length; m++) {
-                      if ( body[k].details[m]['sku'] == array[p]?.[this.CODIGOS]  && body[k].details[m]['lottable06'] == array[p]?.[this.Lote] ){
+                      if ( body[k].details[m]['sku'] == array[p]?.[this.CODIGOS]  && body[k].details[m]['lottable06'] == array[p]?.[this.Lote] && body[k].details[m]['lottable09'] == array[p]?.['CONTENEDOR'] ){
                         comprobar2 = true;
                         posicion  = m
                         cantidad  = array[p]?.[this.CAJAS] 
@@ -266,6 +270,7 @@ storerkey            : this.propietario,
                           // externpokey    : String(array[p]?.[this.PLANILLA]),
                           // pokey          : String(array[p]?.[this.PLANILLA]),
                           // externpolineno : String(body[k].details.length + 1),
+                          lottable09     : validarVacio(String(array[p]?.['CONTENEDOR'])),
                           lottable06     : validarVacio(String(array[p]?.[this.Lote]))
                       })
                       }
@@ -281,6 +286,7 @@ storerkey            : this.propietario,
                       // pokey          : String(array[p]?.[this.PLANILLA]),
                       //  pokey          : '',
                       // externpolineno : String(body[k].details.length + 1),
+                      lottable09     : validarVacio(String(array[p]?.['CONTENEDOR'])),
                       lottable06     : validarVacio(String(array[p]?.[this.Lote]))
                   })
                   }
@@ -388,6 +394,7 @@ enviarData(){
           this.usuarioAuthQA = res?.data?.Table0[0]?.usuarioAuth0QA;
           this.PwdPrd        = res?.data?.Table0[0]?.pwdPRD;
           this.PwdQa         = res?.data?.Table0[0]?.pwdQA;
+          this.almacen       = res?.data?.Table0[0]?.WM;
           this.ObtenerToken( this.username );
         }
       }
@@ -412,6 +419,7 @@ enviarData(){
         externlineno : string,
         // pokey : string,
         // externpolineno : string,
+        lottable09   : string,
         lottable06   : string
       }[],
       whseid     : string,
@@ -430,6 +438,7 @@ enviarData(){
       sku          : string,
       uom          : string,
       externlineno : string,
+      lottable09   : string,
       // externpolineno : string,
       lottable06   : string
     }[],
